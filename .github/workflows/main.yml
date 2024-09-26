@@ -1,1 +1,11 @@
 name: build
+
+on:
+  push:
+    - main
+
+jobs:
+  hello_world:
+    runs-on: windows-2019
+    steps:
+      - run: echo "Hello, World!"
