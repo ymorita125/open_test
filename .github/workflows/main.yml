@@ -105,7 +105,8 @@ jobs:
       - name: Get solver version
         shell: pwsh
         run: |
-          $def = [XML](Get-Content ..\data\definition.xml)
+          Set-Location .\${{env.WORK_DIR}}
+          $def = [XML](Get-Content .\install\definition.xml)
           Write-Output "SOLVER_VERSION=("v" + $($def.SolverDefinition.version))" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Create Release
