@@ -56,6 +56,27 @@ jobs:
           Write-Output "STATUS=$($c.status)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           Write-Output "BUILD=$($c.build)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
+      - name: Get solver version
+        shell: pwsh
+        run: |
+          Set-Location .\${{env.WORK_DIR}}
+          $def = [XML](Get-Content .\install\definition.xml)
+          Write-Output "SOLVER_VERSION=(v + $($def.SolverDefinition.version))" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: $SOLVER_VERSION
+          release_name: $SOLVER_VERSION
+          body: |
+            Changes in this Release
+            - First Change
+          draft: false
+          prerelease: false
+
       - name: Download latest iricsdk
         if: ${{ env.BUILD == 'True' }}
         shell: pwsh
@@ -101,27 +122,6 @@ jobs:
           del $7zfile
           # export environment variable IFW_VERSION for later steps
           Write-Output "IFW_VERSION=$($matches.major).$($matches.minor)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-
-      - name: Get solver version
-        shell: pwsh
-        run: |
-          Set-Location .\${{env.WORK_DIR}}
-          $def = [XML](Get-Content .\install\definition.xml)
-          Write-Output "SOLVER_VERSION=("v" + $($def.SolverDefinition.version))" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: $SOLVER_VERSION
-          release_name: $SOLVER_VERSION
-          body: |
-            Changes in this Release
-            - First Change
-          draft: false
-          prerelease: false
 
       - name: Delete from dev
         if: ${{ env.STATUS == 'private' }}
