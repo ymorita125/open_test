@@ -61,7 +61,7 @@ jobs:
         run: |
           Set-Location .\${{env.WORK_DIR}}
           $def = [XML](Get-Content .\install\definition.xml)
-          Write-Output "SOLVER_VERSION=('v' + $($def.SolverDefinition.version))" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          Write-Output ("SOLVER_VERSION=v" + $($def.SolverDefinition.version)) | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Create Release
         id: create_release
