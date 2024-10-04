@@ -69,8 +69,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: $SOLVER_VERSION
-          release_name: $SOLVER_VERSION
+          tag_name: ${{ env.SOLVER_VERSION }}
+          release_name: ${{env.SOLVER_VERSION }}
           body: |
             Changes in this Release
             - First Change
