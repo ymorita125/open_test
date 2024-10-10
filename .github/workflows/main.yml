@@ -94,8 +94,6 @@ jobs:
       #     draft: false
       #     prerelease: false
 
-      - name: Create Release
-
       - name: Download latest iricsdk
         if: ${{ env.BUILD == 'True' }}
         shell: pwsh
