@@ -61,21 +61,40 @@ jobs:
         run: |
           Set-Location .\${{env.WORK_DIR}}
           $def = [XML](Get-Content .\install\definition.xml)
-          Write-Output ("SOLVER_VERSION=v" + $($def.SolverDefinition.version)) | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          Write-Output "SOLVER_VERSION=v$($def.SolverDefinition.version)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Make zipfile
+        shell: pwsh
+        run: |
+          Set-Location .\
+          Compress-Archive -Path .\${{env.WORK_DIR}}\install\ -DestinationPath .\install.zip
 
       - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.SOLVER_VERSION }}
-          release_name: ${{env.SOLVER_VERSION }}
           body: |
             Changes in this Release
             - First Change
           draft: false
           prerelease: false
+          files: .\install.zip
+
+      # - name: Create Release
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ env.SOLVER_VERSION }}
+      #     release_name: ${{env.SOLVER_VERSION }}
+      #     body: |
+      #       Changes in this Release
+      #       - First Change
+      #     draft: false
+      #     prerelease: false
+
+      - name: Create Release
 
       - name: Download latest iricsdk
         if: ${{ env.BUILD == 'True' }}
