@@ -78,7 +78,7 @@ jobs:
             - First Change
           draft: false
           prerelease: false
-          files: .\install.zip
+          files: install.zip
 
       - name: Delete zipfile
         shell: pwsh
