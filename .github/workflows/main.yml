@@ -66,8 +66,8 @@ jobs:
       - name: Make zipfile
         shell: pwsh
         run: |
-          Set-Location .\
-          Compress-Archive -Path .\${{env.WORK_DIR}}\install\ -DestinationPath .\install.zip
+          Set-Location .\${{env.WORK_DIR}}
+          Compress-Archive -Path .\install\ -DestinationPath .\install.zip
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
@@ -79,6 +79,12 @@ jobs:
           draft: false
           prerelease: false
           files: .\install.zip
+
+      - name: Delete zipfile
+        shell: pwsh
+        run: |
+          Set-Location .\${{env.WORK_DIR}}
+          Remove-Item .\install.zip
 
       # - name: Create Release
       #   id: create_release
