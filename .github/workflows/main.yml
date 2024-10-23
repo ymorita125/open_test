@@ -67,12 +67,13 @@ jobs:
         shell: pwsh
         run: |
           # Set-Location .\${{env.WORK_DIR}}
-          Compress-Archive -Path .\${{env.WORK_DIR}}\install\ -DestinationPath .\install.zip
+          Compress-Archive -Path .\${{env.WORK_DIR}}\install\* -DestinationPath .\install.zip
           [IO.Path]::GetFullPath(".\install.zip")
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
+          fail_on_unmatched_files: true
           tag_name: ${{ env.SOLVER_VERSION }}
           body: |
             Changes in this Release
