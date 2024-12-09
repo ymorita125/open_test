@@ -70,6 +70,20 @@ jobs:
           Compress-Archive -Path .\${{env.WORK_DIR}}\install\* -DestinationPath .\install.zip
           [IO.Path]::GetFullPath(".\install.zip")
 
+      - name: Check if tag exists
+        id: check_tag
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const tag = '${{ github.ref }}'.replace('refs/tags/', '');
+            const { data: tags } = await github.repos.listTags({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            if (tags.some(t => t.name === tag)) {
+              core.setFailed(`Tag ${tag} already exists`);
+            }
+
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
