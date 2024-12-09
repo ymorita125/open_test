@@ -75,7 +75,8 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const tag = '${{ github.ref }}'.replace('refs/tags/', '');
+            const tag = '${{ env.SOLVER_VERSION }}';
+            console.log(tag)
             const { data: tags } = await github.repos.listTags({
               owner: context.repo.owner,
               repo: context.repo.repo,
